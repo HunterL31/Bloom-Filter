@@ -28,13 +28,41 @@ class BloomFilter(object):
         digest = hashlib.sha512(item).hexdigest()
         self.bit_array5[int(digest, 16) % self.size] = True
 
-    def check(self, item):
-        print("hi")
-        #Check for item presence in filter
-        #Hash either 3 or 5 times
-        #Get set of positions and check if each one is a 0
-        #If you find a 0, password is good
-        #Else password is bad
+    def check3(self, item):
+        digests = [0, 0, 0]
+        digests[0] = int((hashlib.md5(item).hexdigest()), 16) % self.size
+        digests[1] = int((hashlib.sha1(item).hexdigest()), 16) % self.size
+        digests[2] = int((hashlib.sha224(item).hexdigest()), 16) % self.size
+        
+        if self.bit_array3[digests[0]] == False:
+            return 2
+        elif self.bit_array3[digests[1]] == False:
+            return 2
+        elif self.bit_array3[digests[2]] == False:
+            return 2
+
+        return 0
+
+    def check5(self, item):
+        digests = [0, 0, 0, 0, 0]
+        digests[0] = int((hashlib.md5(item).hexdigest()), 16) % self.size
+        digests[1] = int((hashlib.sha1(item).hexdigest()), 16) % self.size
+        digests[2] = int((hashlib.sha224(item).hexdigest()), 16) % self.size
+        digests[3] = int((hashlib.sha256(item).hexdigest()), 16) % self.size
+        digests[4] = int((hashlib.sha512(item).hexdigest()), 16) % self.size
+        
+        if self.bit_array3[digests[0]] == False:
+            return 2
+        elif self.bit_array3[digests[1]] == False:
+            return 2
+        elif self.bit_array3[digests[2]] == False:
+            return 2
+        elif self.bit_array3[digests[3]] == False:
+            return 2
+        elif self.bit_array3[digests[4]] == False:
+            return 2
+
+        return 0
 
     @classmethod
     def get_size(self, n, p):
