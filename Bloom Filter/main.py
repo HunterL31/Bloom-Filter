@@ -4,6 +4,7 @@ import hashlib
 import math
 import uuid
 from bitarray import bitarray
+import time
 
 dictionary = ''
 input = ''
@@ -23,25 +24,23 @@ else:
             output3 = sys.argv[i + 1]
             output5 = sys.argv[i + 2]
 
+p = .05    #Desired false positive probablility
+n = 0       #Will be the number of entries in the dictionary file
+
+#Open all desired files
+dictfile = open(dictionary, "r")
+for line in dictfile:
+    n = n + 1
+dictfile.close()
 dictfile = open(dictionary, "r")
 inpfile = open(input, "r")
 out3file = open(output3, "w")
 out5file = open(output5, "w")
 
+bloomf = BloomFilter(n, p)
+print("Bloom Filter size: {}".format(bloomf.size))
+print("False Positive Probability: {}".format(bloomf.fp_prob))
+print("Using Hash Functions: MD5, SHA1, SHA224, SHA256, SHA512")
+
 for line in dictfile:
-    print(hash(line))
-    hash_object = hashlib.md5(line.encode())
-    print(hash_object.hexdigest())
-    hash_object = hashlib.sha1(line.encode())
-    print(hash_object.hexdigest())
-    hash_object = hashlib.sha224(line.encode())
-    print(hash_object.hexdigest())
-    hash_object = hashlib.sha256(line.encode())
-    print(hash_object.hexdigest())
-    hash_object = hashlib.sha384(line.encode())
-    print(hash_object.hexdigest())
-    hash_object = hashlib.sha512(line.encode())
-    print(hash_object.hexdigest())
-    salt = uuid.uuid4().hex
-    hash_object = hashlib.sha512(salt.encode() + line.encode()).hexdigest() + ":" + salt
-    print(hash_object)
+    bloomf.add(line)
