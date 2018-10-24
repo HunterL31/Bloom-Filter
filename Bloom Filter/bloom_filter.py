@@ -1,26 +1,16 @@
-import sys
+import hashlib
+import math
+import uuid
+from bitarray import bitarray
 
-dictionary = ''
-input = ''
-output3 = ''
-output5 = ''
+class BloomFilter(object):
+    def __init__(self, itemcount, fpprob):
+        self.fp_prob = fpprob
+        self.size = self.get_size(itemcount, fpprob)
+        self.bit_array = bitarray(self.size)
+        self.bit_array.setall(0)
 
-# Basic error checking on argument number and parsing of CL args
-if len(sys.argv) != 8:
-    print("Incorrect argument count")
-else:
-    for i in range(len(sys.argv)):
-        if sys.argv[i] == '-d':
-            dictionary = sys.argv[i + 1]
-        elif sys.argv[i] == '-i':
-            input = sys.argv[i + 1]
-        elif sys.argv[i] == '-o':
-            output3 = sys.argv[i + 1]
-            output5 = sys.argv[i + 2]
-    #print(dictionary, input, output3, output5)
-
-dictfile = open(dictionary, "r")
-inpfile = open(input, "r")
-out3file = open(output3, "w")
-out5file = open(output5, "w")
-
+    @classmethod
+    def get_size(self, n, p):
+        m = -(n * math.log(p))/(math.log(2)**2)
+        return int(m)
