@@ -18,3 +18,9 @@ else:
             output3 = sys.argv[i + 1]
             output5 = sys.argv[i + 2]
     #print(dictionary, input, output3, output5)
+
+dictfile = open(dictionary, "r")
+inpfile = open(input, "r")
+out3file = open(output3, "w")
+out5file = open(output5, "w")
+
